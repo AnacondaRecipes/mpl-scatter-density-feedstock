@@ -1,47 +1,60 @@
 {% set name = "mpl-scatter-density" %}
-{% set version = "0.7" %}
-{% set sha256 = "cace750887916d3881b3a42ab5805769cc8d7eb70ef610938cbb57c967277620" %}
+{% set version = "0.8" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
+  sha256: 2dbabdcc3f98b04af49aa8ac3efa392d9a9fe175b125b31f9d5d4c337398d633
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  script_env:
+    - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<36]
 
 requirements:
   host:
     - pip
-    - python >=3.6
-    - setuptools
-    - setuptools_scm
-    - numpy >=1.11
-    - matplotlib-base >=3.0
-    - fast-histogram >=0.3
+    - python
+    - wheel
+    - setuptools >=30.3.0
+    - setuptools-scm
   run:
-    - python >=3.6
-    - numpy >=1.11
+    - python
+    - numpy
     - matplotlib-base >=3.0
     - fast-histogram >=0.3
 
 test:
   imports:
     - mpl_scatter_density
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest --pyargs mpl_scatter_density.tests
+  requires:
+    - pip
+    - pytest
 
 about:
   home: http://github.com/astrofrog/mpl-scatter-density
+  summary: Matplotlib helpers to make density scatter plots
   license: BSD-2-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: Matplotlib helpers to make density scatter plots
-  description: Matplotlib helpers to make density scatter plots
+  description: |
+    Plotting millions of points can be slow. Real slow... 😴
+
+    So why not use density maps? ⚡
+
+    The mpl-scatter-density mini-package provides functionality to make it easy to make your own scatter density
+    maps, both for interactive and non-interactive use. Fast. The following animation shows real-time interactive
+    use with 10 million points, but interactive performance is still good even with 100 million points (and more if you have
+    enough RAM).
   doc_url: http://github.com/astrofrog/mpl-scatter-density
   dev_url: http://github.com/astrofrog/mpl-scatter-density
 
