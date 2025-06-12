@@ -41,7 +41,7 @@ test:
     - pytest
 
 about:
-  home: http://github.com/astrofrog/mpl-scatter-density
+  home: https://github.com/astrofrog/mpl-scatter-density
   summary: Matplotlib helpers to make density scatter plots
   license: BSD-2-Clause
   license_family: BSD
@@ -55,8 +55,8 @@ about:
     maps, both for interactive and non-interactive use. Fast. The following animation shows real-time interactive
     use with 10 million points, but interactive performance is still good even with 100 million points (and more if you have
     enough RAM).
-  doc_url: http://github.com/astrofrog/mpl-scatter-density
-  dev_url: http://github.com/astrofrog/mpl-scatter-density
+  doc_url: https://github.com/astrofrog/mpl-scatter-density
+  dev_url: https://github.com/astrofrog/mpl-scatter-density
 
 extra:
   recipe-maintainers:
