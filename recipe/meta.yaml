@@ -2,7 +2,7 @@
 {% set version = "0.8" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
@@ -10,7 +10,7 @@ source:
   sha256: 2dbabdcc3f98b04af49aa8ac3efa392d9a9fe175b125b31f9d5d4c337398d633
 
 build:
-  number: 0
+  number: 1
   script_env:
     - SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
@@ -35,7 +35,10 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest --pyargs mpl_scatter_density.tests
+    # Tests create matplotlib figures, so without a forced backend pyplot picks Tk/TkAgg on Windows
+    # and dies on headless workers (_tkinter.TclError), hence MPLBACKEND=Agg for a deterministic headless run.
+    - MPLBACKEND=Agg pytest --pyargs mpl_scatter_density.tests                      # [unix]
+    - set "MPLBACKEND=Agg" && pytest --pyargs mpl_scatter_density.tests   # [win]
   requires:
     - pip
     - pytest
