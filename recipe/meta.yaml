@@ -37,7 +37,7 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     # tests create figures, so do not let matplotlib pick the Tk GUI backend on headless workers
     - MPLBACKEND=Agg pytest --pyargs mpl_scatter_density.tests                      # [unix]
-    - set MPLBACKEND=Agg && pytest --pyargs mpl_scatter_density.tests              # [win]
+    - set "MPLBACKEND=Agg" && pytest --pyargs mpl_scatter_density.tests   # [win]
   requires:
     - pip
     - pytest
