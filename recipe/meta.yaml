@@ -35,7 +35,8 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    # tests create figures, so do not let matplotlib pick the Tk GUI backend on headless workers
+    # Tests create matplotlib figures, so without a forced backend pyplot picks Tk/TkAgg on Windows
+    # and dies on headless workers (_tkinter.TclError), hence MPLBACKEND=Agg for a deterministic headless run.
     - MPLBACKEND=Agg pytest --pyargs mpl_scatter_density.tests                      # [unix]
     - set "MPLBACKEND=Agg" && pytest --pyargs mpl_scatter_density.tests   # [win]
   requires:
